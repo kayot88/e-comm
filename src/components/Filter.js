@@ -1,6 +1,13 @@
 import React from 'react';
 
-const Filter = ({ count, size, sort, handleChangeSize, handleChangeSort }) => {
+const Filter = ({
+  count,
+  size,
+  sort,
+  handleChangeSize,
+  handleChangeSort,
+  uniqueSize
+}) => {
   return (
     <div className="row filter-wrapper">
       <div className="col-md-4">We found {count} items</div>
@@ -12,7 +19,11 @@ const Filter = ({ count, size, sort, handleChangeSize, handleChangeSort }) => {
           value={size}
           onChange={handleChangeSize}
         >
-          <option value="">Select size</option>
+          <option value=""></option>
+          <option value="M">M</option>
+          <option value="S">S</option>
+          <option value="X">X</option>
+          <option value="L">L</option>
           <option value="XL">XL</option>
           <option value="XXL">XXL</option>
         </select>
