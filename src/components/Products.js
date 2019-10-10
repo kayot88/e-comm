@@ -9,7 +9,8 @@ const Products = ({ products, handledAddToCart }) => {
           display: 'flex',
           justifyContent: 'center',
           minHeight: '100vh',
-          alignItems: 'center'
+          alignItems: 'center',
+          
         }}
       >
         <FadeLoader />
@@ -26,7 +27,10 @@ const Products = ({ products, handledAddToCart }) => {
             </div>
           </a>
           <div className="price">${item.price}</div>
-          <button className="btn btn-primary" onClick={handledAddToCart}>
+          <button
+            className="btn btn-primary cartButton"
+            onClick={e => handledAddToCart(e, item)}
+          >
             Add to card
           </button>
         </div>

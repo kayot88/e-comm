@@ -34,9 +34,37 @@
   min-height: fit-content;
   border-radius: 5px;
 }
-button {
+.cartButton {
   position: absolute;
   bottom: 0;
+}
+.buckets-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0 15px;
+  flex-shrink: unset;
+  /* text-align: left; */
+  /* justify-content: center; */
+
+  /* padding: 2px; */
+  /* justify-content: left; */
+  /* align-items: flex-start; */
+
+  text-decoration: none;
+  list-style: none;
+}
+.total {
+  display: flex;
+  flex-direction: column;
+}
+.listItem {
+  position: relative;
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  color: #000;
+  border: 2px solid olive;
+  border-radius: 5px;
 }
 a {
   cursor: pointer;
@@ -49,6 +77,7 @@ a {
   margin: 5px 0;
   border-radius: 5px;
 }
+
 .form-control {
   display: inline-block;
 }
@@ -81,10 +110,26 @@ p {
   text-decoration: none;
 }
 .buckets {
-  background: red;
+  display: flex;
+  flex-direction: column;
+}
+.buckets-alert {
+  background: #61dafb;
+  padding: 15px 0;
+  margin-top: 10px;
+  border-radius: 5px;
+  text-align: center;
 }
 .App-link {
   color: #61dafb;
+}
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.wrapper{
+
 }
 /* @keyframes App-logo-spin {
   from {

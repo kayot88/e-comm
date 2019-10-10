@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Products from './components/Products';
 import Filter from './components/Filter';
+import Buckets from './components/Buckets';
 import './App.css';
 class App extends Component {
   state = {
@@ -8,10 +9,37 @@ class App extends Component {
     filteredProducts: [],
     size: '',
     sort: '',
-    uniqueSize: []
+    uniqueSize: [],
+    cartItems: []
   };
-  handledAddToCart = e => {
-    console.log(e.target);
+  handleRemoveFromCart = (e, product) => {
+    this.setState(state => {
+      const cartItems = state.cartItems.filter(cart => {
+        return cart.id !== product.id;
+      });
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      return { cartItems: cartItems };
+    });
+  };
+
+  handledAddToCart = (e, item) => {
+    this.setState(state => {
+      const { cartItems } = state;
+      console.log(state);
+      let productAllreadyInCartItems = false;
+      cartItems.forEach(cart => {
+        console.log(this.state);
+        if (cart.id === item.id) {
+          productAllreadyInCartItems = true;
+          return cart.count++;
+        }
+      });
+      if (!productAllreadyInCartItems) {
+        return cartItems.push({ ...item, count: 1 });
+      }
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      return cartItems;
+    });
   };
   handleChangeSize = e => {
     this.setState(
@@ -66,11 +94,15 @@ class App extends Component {
       } else {
         return state.filteredProducts.sort((a, b) => (a.id < b.id ? 1 : -1));
       }
-      // return { filteredProducts: state.products };
     });
   };
 
   componentWillMount() {
+    if (localStorage.getItem('cartItems')) {
+      this.setState({
+        cartItems: JSON.parse(localStorage.getItem('cartItems'))
+      });
+    }
     fetch('http://localhost:8000/products/')
       .then(res => {
         return res.json();
@@ -112,7 +144,7 @@ class App extends Component {
               handledAddToCart={this.handledAddToCart}
             />
           </div>
-          <div className="col-md-4 buckets">Buckets</div>
+          <Buckets cartItems={this.state.cartItems} handleRemoveFromCart={this.handleRemoveFromCart}>Buckets</Buckets>
         </div>
       </div>
     );
