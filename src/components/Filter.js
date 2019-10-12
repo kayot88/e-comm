@@ -1,13 +1,23 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import {
+  filterSize,
+  fetchProducts,
+  orderByPrice
+} from '../actions/productsAction';
 
 const Filter = ({
   count,
   size,
-  sort,
-  handleChangeSize,
-  handleChangeSort,
-  uniqueSize
+  order,
+  products,
+  filterSize,
+  orderByPrice,
+  filtered
 }) => {
+  // console.log(products);
+  const items = products;
+  const filteredItems = filtered;
   return (
     <div className="row filter-wrapper">
       <div className="col-md-4">We found {count} items</div>
@@ -17,7 +27,9 @@ const Filter = ({
           name="itemSize"
           className="form-control"
           value={size}
-          onChange={handleChangeSize}
+          onChange={e => {
+            filterSize(e.target.value, products);
+          }}
         >
           <option value=""></option>
           <option value="M">M</option>
@@ -29,12 +41,15 @@ const Filter = ({
         </select>
       </div>
       <div className="col-md-4">
-        <label htmlFor="itemSize">Order by</label>
+        <label htmlFor="itemSort">Order by</label>
         <select
+          id="itemSort"
           name="itemSort"
           className="form-control"
-          value={sort}
-          onChange={handleChangeSort}
+          value={order}
+          onChange={e => {
+            return orderByPrice(e.target.value, items, filteredItems);
+          }}
         >
           <option value=""></option>
           <option value="lowest">Lowest to highest</option>
@@ -44,5 +59,14 @@ const Filter = ({
     </div>
   );
 };
+const mapStateToProps = state => ({
+  products: state.products.product,
+  size: state.products.size,
+  order: state.products.order,
+  filtered: state.products.filteredBySize
+});
 
-export default Filter;
+export default connect(
+  mapStateToProps,
+  { filterSize, fetchProducts, orderByPrice }
+)(Filter);

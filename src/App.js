@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+import { connect, Provider } from 'react-redux';
+import { fetchProducts, filterSize } from './actions/productsAction';
+import store from './store';
+// import gql from 'graphql-tag';
+
 import Products from './components/Products';
 import Filter from './components/Filter';
 import Buckets from './components/Buckets';
@@ -8,7 +13,7 @@ class App extends Component {
     products: [],
     filteredProducts: [],
     size: '',
-    sort: '',
+    // sort: '',
     uniqueSize: [],
     cartItems: []
   };
@@ -41,114 +46,94 @@ class App extends Component {
       return cartItems;
     });
   };
-  handleChangeSize = e => {
-    this.setState(
-      {
-        size: e.target.value
-      },
-      function() {
-        this.listSize();
-      }
-    );
-  };
-  listSize = () => {
-    this.setState(state => {
-      if (state.size !== '') {
-        var filteredBySize = state.products.filter(item => {
-          const literr = item.availableSizes;
-          if (literr.includes(state.size)) {
-            return item;
-          }
-          return filteredBySize;
-        });
-      } else {
-        return { filteredProducts: state.products };
-      }
+  // handleChangeSize = e => {
+   
+  // };
+  // listSize = () => {
+  //   this.setState(state => {
+  //     if (state.size !== '') {
+  //       var filteredBySize = state.products.filter(item => {
+  //         const literr = item.availableSizes;
+  //         if (literr.includes(state.size)) {
+  //           return item;
+  //         }
+  //         return filteredBySize;
+  //       });
+  //     } else {
+  //       return { filteredProducts: state.products };
+  //     }
 
-      return { filteredProducts: filteredBySize };
-    });
-  };
+  //     return { filteredProducts: filteredBySize };
+  //   });
+  // };
 
-  handleChangeSort = e => {
-    this.setState(
-      {
-        sort: e.target.value
-      },
-      function() {
-        this.listProducts();
-      }
-    );
-  };
-  listProducts = () => {
-    this.setState(state => {
-      if (state.sort !== '') {
-        return state.filteredProducts.sort((a, b) => {
-          return state.sort === 'lowest'
-            ? a.price < b.price
-              ? -1
-              : 1
-            : a.price > b.price
-            ? -1
-            : 1;
-        });
-      } else {
-        return state.filteredProducts.sort((a, b) => (a.id < b.id ? 1 : -1));
-      }
-    });
-  };
+  // handleChangeSort = e => {
+  //   this.setState(
+  //     {
+  //       sort: e.target.value
+  //     },
+  //     function() {
+  //       this.listProducts();
+  //     }
+  //   );
+  // };
+  // listProducts = () => {
+  //   this.setState(state => {
+  //     if (state.sort !== '') {
+  //       return state.filteredProducts.sort((a, b) => {
+  //         return state.sort === 'lowest'
+  //           ? a.price < b.price
+  //             ? -1
+  //             : 1
+  //           : a.price > b.price
+  //           ? -1
+  //           : 1;
+  //       });
+  //     } else {
+  //       return state.filteredProducts.sort((a, b) => (a.id < b.id ? 1 : -1));
+  //     }
+  //   });
+  // };
 
   componentWillMount() {
-    if (localStorage.getItem('cartItems')) {
-      this.setState({
-        cartItems: JSON.parse(localStorage.getItem('cartItems'))
-      });
-    }
-    fetch('http://localhost:8000/products/')
-      .then(res => {
-        return res.json();
-      })
-      .then(data => {
-        this.setState({
-          products: data,
-          filteredProducts: data
-        });
-        const tempData = data.map(item => {
-          return item.availableSizes;
-        });
-        const uniqueArr = new Set(tempData.flat(1));
-        return this.setState({
-          uniqueSize: uniqueArr
-        });
-      })
-      .catch(error => console.log(error));
-  }
+    this.props.fetchProducts();
+      }
 
   render() {
-    const { filteredProducts } = this.state;
     return (
-      <div className="container">
-        <h1>Ecommerce Sopping Cart</h1>
-        <hr />
-        <div className="row">
-          <div className="col-md-8">
-            <Filter
-              size={this.state.size}
-              sort={this.state.sort}
-              uniqueSize={this.state.uniqueSize}
-              handleChangeSize={this.handleChangeSize}
-              handleChangeSort={this.handleChangeSort}
-              count={this.state.filteredProducts.length}
-            />
-            <Products
-              products={filteredProducts}
-              handledAddToCart={this.handledAddToCart}
-            />
+      <Provider store={store}>
+        <div className="container">
+          <h1>Ecommerce Shopping Cart</h1>
+          <hr />
+          <div className="row">
+            <div className="col-md-8">
+              <Filter
+                uniqueSize={this.state.uniqueSize}
+                count={this.state.filteredProducts.length}
+              />
+              <Products
+                 handledAddToCart={this.handledAddToCart}
+              />
+            </div>
+            <Buckets
+              cartItems={this.state.cartItems}
+              handleRemoveFromCart={this.handleRemoveFromCart}
+            >
+              Buckets
+            </Buckets>
           </div>
-          <Buckets cartItems={this.state.cartItems} handleRemoveFromCart={this.handleRemoveFromCart}>Buckets</Buckets>
         </div>
-      </div>
+      </Provider>
     );
   }
 }
-
-export default App;
+const mapStateToProps = state => ({
+  products: state.products,
+  size: state.products.size,
+  filteredProducts: state.products.filteredBySize
+});
+ 
+export default connect(
+  mapStateToProps,
+  { fetchProducts, filterSize }
+)(App);

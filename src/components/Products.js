@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import FadeLoader from 'react-spinners/FadeLoader';
-
+// import { ADD_TO_CART, REMOVE_FROM_CART } from '../constants/type';
 const Products = ({ products, handledAddToCart }) => {
+  console.log(products);
   if (products.length === 0) {
     return (
       <div
@@ -9,8 +11,7 @@ const Products = ({ products, handledAddToCart }) => {
           display: 'flex',
           justifyContent: 'center',
           minHeight: '100vh',
-          alignItems: 'center',
-          
+          alignItems: 'center'
         }}
       >
         <FadeLoader />
@@ -39,5 +40,14 @@ const Products = ({ products, handledAddToCart }) => {
     return <div className="item">{productsItems}</div>;
   }
 };
+const mapStateToProps = state => ({
+  products:
+    state.products.filteredBySize.length !== 0
+      ? state.products.filteredBySize
+      : state.products.product,
+});
 
-export default Products;
+export default connect(
+  mapStateToProps,
+  // { fetchProducts }
+)(Products);
