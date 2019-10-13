@@ -1,9 +1,17 @@
-import { FETCH_DATA, FILTER_BY_SIZE, FILTER_BY_SORT } from '../constants/type';
+import {
+  FETCH_DATA,
+  FILTER_BY_SIZE,
+  FILTER_BY_SORT,
+  ADD_TO_CART,
+  REMOVE_FROM_CART
+} from '../constants/type';
 
 const initialState = {
   product: [],
   size:'',
   order:'',
+  // count: 0,
+  cartItems: [],
   filteredBySize: []
 };
 
@@ -26,6 +34,11 @@ export default (state = initialState, action) => {
         product: action.payload.items,
         order: action.payload.order,
         filteredBySize: action.payload.filterdProducts
+      };
+    case ADD_TO_CART:
+      return {
+        ...state,
+        cartItems: action.payload 
       };
     default:
       return state;

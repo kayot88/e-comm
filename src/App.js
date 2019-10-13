@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { connect, Provider } from 'react-redux';
-import { fetchProducts, filterSize } from './actions/productsAction';
+import {
+  fetchProducts,
+  filterSize,
+  addToCartItems
+} from './actions/productsAction';
 import store from './store';
 // import gql from 'graphql-tag';
 
@@ -27,27 +31,25 @@ class App extends Component {
     });
   };
 
-  handledAddToCart = (e, item) => {
-    this.setState(state => {
-      const { cartItems } = state;
-      console.log(state);
-      let productAllreadyInCartItems = false;
-      cartItems.forEach(cart => {
-        console.log(this.state);
-        if (cart.id === item.id) {
-          productAllreadyInCartItems = true;
-          return cart.count++;
-        }
-      });
-      if (!productAllreadyInCartItems) {
-        return cartItems.push({ ...item, count: 1 });
-      }
-      localStorage.setItem('cartItems', JSON.stringify(cartItems));
-      return cartItems;
-    });
-  };
+  // handledAddToCart = (e, item) => {
+  //   this.setState(state => {
+  //     const { cartItems } = state;
+  //     let productAllreadyInCartItems = false;
+  //     cartItems.forEach(cart => {
+  //       if (cart.id === item.id) {
+  //         productAllreadyInCartItems = true;
+  //         return cart.count++;
+  //       }
+  //     });
+  //     if (!productAllreadyInCartItems) {
+  //       return cartItems.push({ ...item, count: 1 });
+  //     }
+  //     localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  //     return cartItems;
+  //   });
+  // };
   // handleChangeSize = e => {
-   
+
   // };
   // listSize = () => {
   //   this.setState(state => {
@@ -97,7 +99,7 @@ class App extends Component {
 
   componentWillMount() {
     this.props.fetchProducts();
-      }
+  }
 
   render() {
     return (
@@ -112,7 +114,9 @@ class App extends Component {
                 count={this.state.filteredProducts.length}
               />
               <Products
-                 handledAddToCart={this.handledAddToCart}
+                handledAddToCart={this.props.addToCartItems(
+                  this.props.cartItems
+                )}
               />
             </div>
             <Buckets
@@ -130,10 +134,11 @@ class App extends Component {
 const mapStateToProps = state => ({
   products: state.products,
   size: state.products.size,
-  filteredProducts: state.products.filteredBySize
+  filteredProducts: state.products.filteredBySize,
+  cartItems: state.products.cartItems
 });
- 
+
 export default connect(
   mapStateToProps,
-  { fetchProducts, filterSize }
+  { fetchProducts, filterSize, addToCartItems }
 )(App);

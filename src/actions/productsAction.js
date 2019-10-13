@@ -71,3 +71,22 @@ export const orderByPrice = (order, items, filteredItems) => dispatch => {
     }
   });
 };
+
+export const addToCartItems = (item, cartItems) => dispatch => {
+      let productAllreadyInCartItems = false;
+      cartItems.forEach(cart => {
+        if (cart.id === item.id) {
+          productAllreadyInCartItems = true;
+          return cart.count++;
+        }
+      });
+      if (!productAllreadyInCartItems) {
+        return cartItems.push({ ...item, count: 1 });
+      }
+      // localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  return dispatch({
+    type: ADD_TO_CART,
+    payload: cartItems
+  });
+}
+
