@@ -6,7 +6,6 @@ import {
   addToCartItems
 } from './actions/productsAction';
 import store from './store';
-// import gql from 'graphql-tag';
 
 import Products from './components/Products';
 import Filter from './components/Filter';
@@ -21,6 +20,11 @@ class App extends Component {
     uniqueSize: [],
     cartItems: []
   };
+  setCartItems = () => {
+    const cartItems = JSON.parse(localStorage.getItem('cartItems'));
+    return cartItems;
+  };
+
   handleRemoveFromCart = (e, product) => {
     this.setState(state => {
       const cartItems = state.cartItems.filter(cart => {
@@ -31,77 +35,13 @@ class App extends Component {
     });
   };
 
-  // handledAddToCart = (e, item) => {
-  //   this.setState(state => {
-  //     const { cartItems } = state;
-  //     let productAllreadyInCartItems = false;
-  //     cartItems.forEach(cart => {
-  //       if (cart.id === item.id) {
-  //         productAllreadyInCartItems = true;
-  //         return cart.count++;
-  //       }
-  //     });
-  //     if (!productAllreadyInCartItems) {
-  //       return cartItems.push({ ...item, count: 1 });
-  //     }
-  //     localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  //     return cartItems;
-  //   });
-  // };
-  // handleChangeSize = e => {
-
-  // };
-  // listSize = () => {
-  //   this.setState(state => {
-  //     if (state.size !== '') {
-  //       var filteredBySize = state.products.filter(item => {
-  //         const literr = item.availableSizes;
-  //         if (literr.includes(state.size)) {
-  //           return item;
-  //         }
-  //         return filteredBySize;
-  //       });
-  //     } else {
-  //       return { filteredProducts: state.products };
-  //     }
-
-  //     return { filteredProducts: filteredBySize };
-  //   });
-  // };
-
-  // handleChangeSort = e => {
-  //   this.setState(
-  //     {
-  //       sort: e.target.value
-  //     },
-  //     function() {
-  //       this.listProducts();
-  //     }
-  //   );
-  // };
-  // listProducts = () => {
-  //   this.setState(state => {
-  //     if (state.sort !== '') {
-  //       return state.filteredProducts.sort((a, b) => {
-  //         return state.sort === 'lowest'
-  //           ? a.price < b.price
-  //             ? -1
-  //             : 1
-  //           : a.price > b.price
-  //           ? -1
-  //           : 1;
-  //       });
-  //     } else {
-  //       return state.filteredProducts.sort((a, b) => (a.id < b.id ? 1 : -1));
-  //     }
-  //   });
-  // };
-
   componentWillMount() {
     this.props.fetchProducts();
+    this.setCartItems();
   }
 
   render() {
+    console.log(this.props.cartItems);
     return (
       <Provider store={store}>
         <div className="container">
@@ -113,11 +53,7 @@ class App extends Component {
                 uniqueSize={this.state.uniqueSize}
                 count={this.state.filteredProducts.length}
               />
-              <Products
-                handledAddToCart={this.props.addToCartItems(
-                  this.props.cartItems
-                )}
-              />
+              <Products handledAddToCart={this.cartItems} />
             </div>
             <Buckets
               cartItems={this.state.cartItems}
@@ -131,11 +67,12 @@ class App extends Component {
     );
   }
 }
+
 const mapStateToProps = state => ({
   products: state.products,
   size: state.products.size,
   filteredProducts: state.products.filteredBySize,
-  cartItems: state.products.cartItems
+  cartItems: state.cartItem.cartItems
 });
 
 export default connect(

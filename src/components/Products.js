@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { addToCartItems } from '../actions/productsAction';
 import FadeLoader from 'react-spinners/FadeLoader';
 // import { ADD_TO_CART, REMOVE_FROM_CART } from '../constants/type';
-const Products = ({ products, handledAddToCart }) => {
-  console.log(products);
+const Products = ({ products, addToCartItems, cartItems }) => {
+  console.log(cartItems);
   if (products.length === 0) {
     return (
       <div
@@ -30,7 +31,7 @@ const Products = ({ products, handledAddToCart }) => {
           <div className="price">${item.price}</div>
           <button
             className="btn btn-primary cartButton"
-            onClick={e => handledAddToCart(e, item)}
+            onClick={() => addToCartItems(item, cartItems)}
           >
             Add to card
           </button>
@@ -45,9 +46,10 @@ const mapStateToProps = state => ({
     state.products.filteredBySize.length !== 0
       ? state.products.filteredBySize
       : state.products.product,
+  cartItems: state.cartItem.cartItems
 });
 
 export default connect(
   mapStateToProps,
-  // { fetchProducts }
+  { addToCartItems }
 )(Products);

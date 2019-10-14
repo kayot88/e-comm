@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 
 const Buckets = ({ cartItems, handleRemoveFromCart }) => {
   return (
-    <div className="col-md-4 buckets">
+    <div className="col-md-4 buckets">  
       <div className="buckets-alert aler-info">
         {cartItems.length === 0
           ? 'no items found'
@@ -43,4 +44,10 @@ const Buckets = ({ cartItems, handleRemoveFromCart }) => {
     </div>
   );
 };
-export default Buckets;
+const mapStateToProps = state => ({
+  cartItems: state.cartItem.cartItems
+});
+
+export default connect(
+  mapStateToProps, null
+)(Buckets);

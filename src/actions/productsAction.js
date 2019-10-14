@@ -67,26 +67,30 @@ export const orderByPrice = (order, items, filteredItems) => dispatch => {
     payload: {
       order,
       filterdProducts,
-      items: products,
+      items: products
     }
   });
 };
 
 export const addToCartItems = (item, cartItems) => dispatch => {
-      let productAllreadyInCartItems = false;
-      cartItems.forEach(cart => {
-        if (cart.id === item.id) {
-          productAllreadyInCartItems = true;
-          return cart.count++;
-        }
-      });
-      if (!productAllreadyInCartItems) {
-        return cartItems.push({ ...item, count: 1 });
-      }
-      // localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  let productAllreadyInCartItems = false;
+  cartItems.forEach(cart => {
+    if (cart.id === item.id) {
+      productAllreadyInCartItems = true;
+      return cart.count++;
+    }
+  });
+  console.log(cartItems);
+  if (!productAllreadyInCartItems) {
+    cartItems.push({ ...item, count: 1 });
+  }
+
+  localStorage.setItem('cartItems', JSON.stringify(cartItems));
+
   return dispatch({
     type: ADD_TO_CART,
-    payload: cartItems
+    payload: {
+      cartItems
+    }
   });
-}
-
+};
