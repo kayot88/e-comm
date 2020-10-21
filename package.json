@@ -5,7 +5,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "react": "^16.10.2",
-    "react-dom": "^16.10.2",
+    "react-dom": "^16.13.0",
     "react-scripts": "3.2.0",
     "react-spinners": "^0.6.1",
     "styled-components": "^4.4.0"
