@@ -7,7 +7,7 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-scripts": "3.2.0",
-    "react-spinners": "^0.6.1",
+    "react-spinners": "^0.10.6",
     "styled-components": "^4.4.0"
   },
   "scripts": {
